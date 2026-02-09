@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:padding="10dp"
+    >
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/layout_ai"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+        <TextView
+            android:id="@+id/tv_ai"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:background="@drawable/bg_ai"
+            android:textColor="@color/black"
+            android:textSize="15sp"
+            android:textIsSelectable="true"
+            android:padding="10dp"
+            android:text="This is Ai"
+
+
+            />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/icons_parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_ai"
+            android:layout_marginTop="3dp"
+            app:layout_constraintStart_toStartOf="parent"
+
+            >
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/copy"
+                android:padding="8dp"
+                android:id="@+id/img_copy"
+                android:background="@drawable/bg_round_image"
+                android:clickable="true"
+                android:foreground="?attr/selectableItemBackgroundBorderless"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                />
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/speaker"
+                android:padding="8dp"
+                android:id="@+id/img_voice"
+                android:background="@drawable/bg_round_image"
+                android:clickable="true"
+                android:foreground="?attr/selectableItemBackgroundBorderless"
+                app:layout_constraintStart_toEndOf="@id/img_copy"
+                app:layout_constraintTop_toTopOf="parent"
+
+
+                />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <TextView
+        android:id="@+id/tv_user"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:background="@drawable/bg_user"
+        android:textColor="@color/black"
+        android:textSize="15sp"
+        android:text="This is Tajim"
+        android:padding="10dp"
+
+
+
+        />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

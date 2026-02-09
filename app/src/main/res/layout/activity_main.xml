@@ -1,0 +1,422 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_main"
+    android:fitsSystemWindows="true"
+    >
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/toolbar"
+        android:padding="5dp"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="5dp">
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/menu"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+        <ImageView
+            android:layout_width="110dp"
+            android:layout_height="20dp"
+            android:src="@drawable/logo"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:scaleType="centerCrop"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginTop="1dp"/>
+
+        <ImageView
+            android:id="@+id/img_three_dots"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:src="@drawable/three_dots_vertical"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginRight="4dp"
+            />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/input_layout"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:elevation="10dp"
+        android:layout_marginHorizontal="10dp"
+        app:cardCornerRadius="20dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/btn_layout"
+        android:layout_marginBottom="15dp"
+        >
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingVertical="15dp"
+            android:paddingHorizontal="10dp">
+            <EditText
+                android:id="@+id/ed_query"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Ask Something Here"
+                android:background="@android:color/transparent"
+                android:textSize="14sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:paddingHorizontal="5dp"/>
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/btn_layout"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:elevation="5dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="@id/input_layout"
+        app:cardCornerRadius="30dp"
+        android:layout_marginEnd="10dp"
+        app:layout_constraintTop_toTopOf="@id/input_layout"
+        android:clickable="true"
+        android:foreground="?attr/selectableItemBackground"
+
+
+
+
+
+
+        >
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/bg_card"
+
+
+
+            >
+
+            <ImageView
+                android:id="@+id/image_submit"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/arrow_up"
+                android:padding="10dp"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.cardview.widget.CardView>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:id="@+id/recycler_view"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        android:layout_marginTop="10dp"
+        app:layout_constraintBottom_toTopOf="@id/input_layout"
+
+        />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/welcome_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        android:layout_marginTop="20dp"
+        android:padding="10dp">
+
+        <TextView
+            android:id="@+id/tv_welcome_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="This is Tajim"
+            android:textColor="@color/black"
+            android:textSize="17sp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            />
+        <TextView
+            android:id="@+id/tv_welcome_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="How Can I Help You?"
+            android:textColor="@color/black"
+            android:textSize="23sp"
+            app:layout_constraintTop_toBottomOf="@id/tv_welcome_1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            />
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/card_1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/tv_welcome_2"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="30dp"
+            app:layout_constraintWidth_percent="0.48"
+            app:cardCornerRadius="5dp"
+            >
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="10dp"
+                android:background="@color/white"
+                >
+
+                <ImageView
+                    android:id="@+id/img_1"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:src="@drawable/lightbulb"
+                    android:padding="8dp"
+                    android:background="@drawable/bg_round_image"
+                    android:backgroundTint="@color/yellish"
+
+                    app:tint="@color/dark_yellow"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+
+                    />
+
+                <TextView
+                    android:id="@+id/tv_welcome_3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Productivity Boost"
+                    android:textStyle="bold"
+                    app:layout_constraintTop_toBottomOf="@id/img_1"
+                    android:textSize="15sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:layout_marginTop="5dp"
+                    />
+                <TextView
+                    android:id="@+id/tv_welcome_4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Get tips, study strategies, and app guidance to work smarter every day."
+                    app:layout_constraintTop_toBottomOf="@id/tv_welcome_3"
+                    android:textSize="13sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:layout_marginTop="2dp"
+
+                    />
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/card_2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/card_1"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="10dp"
+            app:layout_constraintWidth_percent="0.48"
+            app:cardCornerRadius="5dp"
+
+            >
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="10dp"
+                android:background="@color/white"
+
+                >
+
+                <ImageView
+                    android:id="@+id/img_2"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:src="@drawable/controller"
+                    android:padding="8dp"
+                    android:background="@drawable/bg_round_image"
+                    android:backgroundTint="@color/bluish"
+                    app:tint="@color/dark_blue"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    />
+
+                <TextView
+                    android:id="@+id/tv_welcome_5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Fun &amp; Games"
+                    android:textStyle="bold"
+                    app:layout_constraintTop_toBottomOf="@id/img_2"
+                    android:textSize="15sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:layout_marginTop="5dp"
+                    />
+                <TextView
+                    android:id="@+id/tv_welcome_6"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Explore games, movies, fun challenges, and ways to relax."
+                    app:layout_constraintTop_toBottomOf="@id/tv_welcome_5"
+                    android:textSize="13sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:layout_marginTop="2dp"
+
+                    />
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </com.google.android.material.card.MaterialCardView
+         >
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintTop_toTopOf="@id/card_1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/card_2"
+            app:layout_constraintWidth_percent="0.48"
+            app:cardCornerRadius="5dp"
+
+
+            >
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="10dp"
+                android:background="@color/white"
+                >
+
+                <ImageView
+                    android:id="@+id/img_3"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:src="@drawable/heart"
+                    android:padding="8dp"
+                    android:background="@drawable/bg_round_image"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:backgroundTint="#D7E5FA"
+
+                    />
+
+                <TextView
+                    android:id="@+id/tv_welcome_7"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Smart Personal\nAssistant"
+                    android:textStyle="bold"
+                    app:layout_constraintTop_toBottomOf="@id/img_3"
+                    android:textSize="15sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:layout_marginTop="5dp"
+                    />
+                <TextView
+                    android:id="@+id/tv_welcome_8"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Ask anything. I remember context, understand your needs, and provide tailored answers just for you."
+                    app:layout_constraintTop_toBottomOf="@id/tv_welcome_7"
+                    android:textSize="13sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:layout_marginTop="2dp"
+
+                    />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="About Me"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/fb_icon"
+                    android:textSize="13sp"
+                    android:textColor="@color/blue"
+                    android:textStyle="bold"/>
+                <ImageView
+                    android:id="@+id/fb_icon"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/facebook"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:padding="6dp"/>
+
+
+
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+
+
+
+
+
+
+
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/loading_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:visibility="gone"
+        app:cardBackgroundColor="#F1F5F9"
+        app:cardCornerRadius="16dp"
+        app:cardElevation="2dp"
+        app:strokeWidth="0dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/input_layout"
+        tools:visibility="visible">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:paddingHorizontal="12dp"
+            android:paddingVertical="6dp">
+
+            <ProgressBar
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:layout_marginEnd="8dp"
+                android:indeterminateTint="#6366F1"
+                android:strokeWidth="2" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Tajim is thinking..."
+                android:textColor="#475569"
+                android:textSize="12sp"
+                android:fontFamily="sans-serif-medium"/>
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
