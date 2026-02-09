@@ -45,5 +45,5 @@ dependencies {
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
     implementation("com.android.volley:volley:1.2.1")
-
+    implementation("androidx.core:core-splashscreen:1.0.0")
 }

@@ -17,6 +17,8 @@ import android.view.animation.AccelerateInterpolator;
 import android.view.animation.OvershootInterpolator;
 import android.widget.PopupMenu;
 import android.widget.Toast;
+import androidx.core.splashscreen.SplashScreen;
+
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AlertDialog;
@@ -68,6 +70,12 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setupWindow();
+        //SplashScreen splashScreen = SplashScreen.installSplashScreen(this);
+
+//        splashScreen.setKeepOnScreenCondition(() -> {
+//            // Return true if you want to keep showing splash
+//            return true; // change to true to delay
+//        });
         sharedPreferences = getSharedPreferences("api_info", MODE_PRIVATE);
         editor = sharedPreferences.edit();
         setupTextToSpeech();

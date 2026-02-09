@@ -1,0 +1,8 @@
+<!-- animated_heart.xml -->
+<animated-vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:drawable="@drawable/icon">
+
+    <target
+        android:name="hexagon_group"
+        android:animation="@animator/rotate_anim"/>
+</animated-vector>
