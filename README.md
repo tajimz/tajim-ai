@@ -60,7 +60,7 @@
 
 ## Installation
 
-1. Download the APK from [your source/link].
+1. Download the APK from [https://github.com/tajimz/tajim-ai/releases].
 2. Install on your Android device (requires Android 10+).
 3. Launch the app and start customizing your AI.
 
