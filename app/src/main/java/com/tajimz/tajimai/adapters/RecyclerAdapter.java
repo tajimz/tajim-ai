@@ -74,7 +74,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
 
             }else {
 
-                holder.binding.tvAi.setText(chatModel.getAi());
+                markwon.setMarkdown(holder.binding.tvAi, chatModel.getAi());
                 holder.binding.iconsParent.setVisibility(View.VISIBLE);
 
             }
