@@ -173,7 +173,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void initButtonListeners(){
         binding.btnLayout.setOnClickListener(v->{
-            String text = binding.edQuery.getText().toString();
+            String text = binding.edQuery.getText().toString().trim();
             if (text.isEmpty() ) return;
             addInRecycler(null, text, false);
             binding.edQuery.setText("");
