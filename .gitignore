@@ -14,3 +14,4 @@
 .cxx
 local.properties
 app/src/main/java/com/tajimz/tajimai/SECRETS.java
+app/src/main/java/com/tajimz/tajimai/TajimInfo.java
