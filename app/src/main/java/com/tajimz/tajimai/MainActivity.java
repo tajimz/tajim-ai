@@ -250,10 +250,18 @@ public class MainActivity extends AppCompatActivity {
                     startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/tajimz/tajim-ai")));
 
                     return true;
+                }else if (id == R.id.update_personality){
+                    Toast.makeText(this, "Coming soon", Toast.LENGTH_SHORT).show();
+
+                    return true;
                 }
                 return false;
             });
             popupMenu.show();
+        });
+
+        binding.imgNav.setOnClickListener(v->{
+            Toast.makeText(this, "Coming soon", Toast.LENGTH_SHORT).show();
         });
     }
 

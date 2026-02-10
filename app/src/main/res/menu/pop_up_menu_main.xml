@@ -5,8 +5,11 @@
         android:id="@+id/update_api"
         android:title="Update Api Key"/>
     <item
+        android:id="@+id/update_personality"
+        android:title="Update AI Personality"/>
+    <item
         android:id="@+id/about_us"
-        android:title="About Me"/>
+        android:title="About Developer"/>
     <item
         android:id="@+id/privacy_policy"
         android:title="Privacy Policy"/>
