@@ -46,7 +46,6 @@ public class MainActivity extends AppCompatActivity {
 
     List<ChatModel> list = new ArrayList<>();
     ActivityMainBinding binding;
-    String history = "";
     RecyclerAdapter recyclerAdapter;
     RequestQueue requestQueue ;
     SharedPreferences sharedPreferences;
@@ -145,7 +144,6 @@ public class MainActivity extends AppCompatActivity {
         list.add(new ChatModel(ai, user, isAi, true));
         recyclerAdapter.notifyItemInserted(list.size() -1);
         binding.recyclerView.scrollToPosition(list.size()-1);
-        history += "\n"+user;
         binding.loadingBar.setVisibility(GONE);
     }
 
@@ -286,7 +284,7 @@ public class MainActivity extends AppCompatActivity {
         String system_content = "";
         String modelToUse = "";
         if (system){
-            system_content = SECRETS.small_llm_prompt + history;
+            system_content = SECRETS.small_llm_prompt;
             modelToUse = "llama-3.1-8b-instant";
 
 

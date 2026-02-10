@@ -10,6 +10,7 @@ import android.content.ClipboardManager;
 
 import android.content.Context;
 import android.speech.tts.TextToSpeech;
+import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -60,6 +61,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
         holder.binding.tvUser.setVisibility(GONE);
         holder.binding.tvAi.setText("");
         holder.binding.tvUser.setText("");
+        holder.binding.tvAi.setMovementMethod(LinkMovementMethod.getInstance());
+
 
         ChatModel chatModel = list.get(position);
         if (chatModel.getIsAi()){
@@ -128,6 +131,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
                 }
             }, delayMillis * i);
         }
+
     }
 
     private void copyTextToClip(String text, View anchorView) {
