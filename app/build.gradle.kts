@@ -47,4 +47,5 @@ dependencies {
     androidTestImplementation(libs.espresso.core)
     implementation("com.android.volley:volley:1.2.1")
     implementation("androidx.core:core-splashscreen:1.0.0")
+    implementation("io.noties.markwon:core:4.6.2")
 }

@@ -26,18 +26,24 @@ import android.os.Looper;
 import android.widget.TextView;
 import android.widget.Toast;
 
+
 import java.util.List;
+
+import io.noties.markwon.Markwon;
 
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.RecyclerHolder> {
     Context context;
     List<ChatModel> list;
     RecyclerView recyclerView;
     TextToSpeech tts;
+    Markwon markwon;
+
     public RecyclerAdapter(Context context, List<ChatModel> list, RecyclerView recyclerView, TextToSpeech tts){
         this.context = context;
         this.list = list;
         this.recyclerView = recyclerView;
         this.tts = tts;
+        markwon = Markwon.create(context);
 
 
     }
@@ -105,25 +111,25 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
         }
     }
     private void animateTyping(String message, TextView textView, long delayMillis, ConstraintLayout constraintLayout) {
-        textView.setText(""); // clear previous text
+        textView.setText("");
+        StringBuilder currentText = new StringBuilder();
         Handler handler = new Handler(Looper.getMainLooper());
 
         for (int i = 0; i < message.length(); i++) {
             final int index = i;
             handler.postDelayed(() -> {
-                textView.append(String.valueOf(message.charAt(index)));
+                currentText.append(message.charAt(index));
+                markwon.setMarkdown(textView, currentText.toString());
 
-
-                // Enable button after last character
                 if (index == message.length() - 1 && context instanceof MainActivity) {
                     ((MainActivity) context).enableButton();
-                    recyclerView.scrollToPosition(list.size()-1);
-                    constraintLayout.setVisibility(VISIBLE);
-
+                    recyclerView.scrollToPosition(list.size() - 1);
+                    constraintLayout.setVisibility(View.VISIBLE);
                 }
             }, delayMillis * i);
         }
     }
+
     private void copyTextToClip(String text, View anchorView) {
         ClipboardManager clipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
         ClipData clip = ClipData.newPlainText("Copied Text", text);

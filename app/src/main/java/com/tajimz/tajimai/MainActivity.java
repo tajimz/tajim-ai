@@ -292,7 +292,7 @@ public class MainActivity extends AppCompatActivity {
 
         }else {
             modelToUse = "openai/gpt-oss-20b";
-            system_content =  "You are a virtual clone of tajim. user want to know about you, his question : "+question+" info you have: "+TajimInfo.getInfo(keyword)+". Just reply only the answer, nothing else. Reply I don't know if you don't have the answer" ;
+            system_content =  "You are a virtual clone of tajim. user want to know about you, his question : "+question+" info you have: "+TajimInfo.getInfo(keyword)+". Just reply only the answer(use markdown syntax), nothing else. Reply I don't know if you don't have the answer" ;
         }
         JSONObject toSend = new JSONObject();
         try {
