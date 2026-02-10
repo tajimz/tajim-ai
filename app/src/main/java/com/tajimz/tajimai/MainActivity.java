@@ -176,7 +176,7 @@ public class MainActivity extends AppCompatActivity {
     }
     public void sendToAi(JSONObject jsonObject, VolleyListener volleyListener) {
 
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, "https://api.groq.com/openai/v1/responses", jsonObject,
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, "https://api.groq.com/openai/v1/chat/completions", jsonObject,
                 volleyListener::onSuccess, volleyListener::onFailed){
             @Override
             public Map<String, String> getHeaders() {
@@ -204,14 +204,14 @@ public class MainActivity extends AppCompatActivity {
             try {
                 JSONArray messages = new JSONArray()
                         .put(new JSONObject()
-                                .put("role", "system")
+                        .put("role", "system")
                                 .put("content", SECRETS.prompt + history))
                         .put(new JSONObject()
                                 .put("role", "user")
                                 .put("content", text));
 
                 toSend.put("model", "openai/gpt-oss-20b");
-                toSend.put("input", messages);
+                toSend.put("messages", messages);
 
             } catch (JSONException e) {
                 throw new RuntimeException(e);
@@ -279,18 +279,14 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private String getOutputFromServerJson(JSONObject jsonObject){
-        String output = jsonObject
-                .optJSONArray("output")
-                .optJSONObject(1)
-                .optJSONArray("content")
+    private String getOutputFromServerJson(JSONObject jsonObject) {
+        return jsonObject
+                .optJSONArray("choices")
                 .optJSONObject(0)
-                .optString("text", "");
-        if (output.equals("unguessable_question")){
-            output = "Out of syllabus";
-        }
-        return output;
+                .optJSONObject("message")
+                .optString("content", "");
     }
+
 
     private void showUpdateApiAlert(){
         AlertUpdateApiBinding apiBinding = AlertUpdateApiBinding.inflate(getLayoutInflater());
