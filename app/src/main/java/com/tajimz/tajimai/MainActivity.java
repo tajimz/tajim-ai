@@ -30,6 +30,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.tajimz.tajimai.adapters.RecyclerAdapter;
+import com.tajimz.tajimai.aiclone.AiCloneIntroActivity;
 import com.tajimz.tajimai.databinding.ActivityMainBinding;
 import com.tajimz.tajimai.databinding.AlertUpdateApiBinding;
 import com.tajimz.tajimai.models.ChatModel;
@@ -251,7 +252,7 @@ public class MainActivity extends AppCompatActivity {
 
                     return true;
                 }else if (id == R.id.update_personality){
-                    Toast.makeText(this, "Coming soon", Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(this, AiCloneIntroActivity.class));
 
                     return true;
                 }

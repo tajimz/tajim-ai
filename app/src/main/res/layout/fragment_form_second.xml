@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_main"
+    android:fillViewport="true"
+    android:padding="15dp"
+    tools:context=".form.fragments.FormFragmentSecond">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/title_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Interests &amp; Lifestyle"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/helper_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="*Tell us what you love. Separate multiple items with commas."
+            app:layout_constraintTop_toBottomOf="@id/title_text"
+            android:layout_marginTop="5dp"
+            android:textColor="@color/black"/>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/ed_layout_hobbies"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:hint="Hobbies (e.g. Reading, Gaming)"
+            app:layout_constraintTop_toBottomOf="@id/helper_text">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/ed_hobbies"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textCapSentences" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/ed_layout_interests"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:hint="Interests (e.g. AI, Tech)"
+            app:layout_constraintTop_toBottomOf="@id/ed_layout_hobbies">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/ed_interests"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textCapSentences" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/ed_layout_music"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="8dp"
+            android:hint="Fav Music"
+            app:layout_constraintEnd_toStartOf="@+id/ed_layout_movies"
+            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/ed_layout_interests">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/ed_music"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/ed_layout_movies"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:hint="Fav Movies"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintStart_toEndOf="@id/ed_layout_music"
+            app:layout_constraintTop_toBottomOf="@id/ed_layout_interests">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/ed_movies"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/ed_layout_books"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="8dp"
+            android:hint="Fav Books"
+            app:layout_constraintEnd_toStartOf="@+id/ed_layout_foods"
+            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/ed_layout_music">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/ed_books"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/ed_layout_foods"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:hint="Fav Foods"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintStart_toEndOf="@id/ed_layout_books"
+            app:layout_constraintTop_toBottomOf="@id/ed_layout_music">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/ed_foods"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/ed_layout_sports"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:hint="Sports Played"
+            app:layout_constraintTop_toBottomOf="@id/ed_layout_books">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/ed_sports"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView
+            android:id="@+id/label_travel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Travel Interest Level:"
+            android:layout_marginTop="15dp"
+            android:textColor="@color/black"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/ed_layout_sports" />
+
+        <Spinner
+            android:id="@+id/travel_spinner"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:entries="@array/travel_levels"
+            app:layout_constraintTop_toBottomOf="@id/label_travel"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/bg_spinner"
+            android:padding="10dp"
+            />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_next"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cornerRadius="5dp"
+            android:text="Next"
+            app:layout_constraintTop_toBottomOf="@id/travel_spinner"
+            android:layout_marginTop="30dp"
+            android:layout_marginBottom="20dp"
+            android:backgroundTint="#67FFFFFF"
+            android:textColor="@color/black"
+            app:strokeWidth="2dp"
+            app:strokeColor="@color/theme"
+            />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>
