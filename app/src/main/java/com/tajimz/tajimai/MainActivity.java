@@ -2,7 +2,6 @@ package com.tajimz.tajimai;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
-
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -17,9 +16,6 @@ import android.view.animation.AccelerateInterpolator;
 import android.view.animation.OvershootInterpolator;
 import android.widget.PopupMenu;
 import android.widget.Toast;
-import androidx.core.splashscreen.SplashScreen;
-
-
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -28,8 +24,6 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
-
-import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.VolleyError;
@@ -39,17 +33,14 @@ import com.tajimz.tajimai.adapters.RecyclerAdapter;
 import com.tajimz.tajimai.databinding.ActivityMainBinding;
 import com.tajimz.tajimai.databinding.AlertUpdateApiBinding;
 import com.tajimz.tajimai.models.ChatModel;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -61,9 +52,6 @@ public class MainActivity extends AppCompatActivity {
     SharedPreferences sharedPreferences;
     SharedPreferences.Editor editor;
     TextToSpeech tts;
-
-
-
 
 
     @Override
@@ -79,9 +67,6 @@ public class MainActivity extends AppCompatActivity {
         sharedPreferences = getSharedPreferences("api_info", MODE_PRIVATE);
         editor = sharedPreferences.edit();
         setupTextToSpeech();
-
-
-
         initAdapter();
         initButtonListeners();
         requestQueue = Volley.newRequestQueue(this);
@@ -125,29 +110,22 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupTextToSpeech(){
-        tts = new TextToSpeech(this, status -> tts.setLanguage(Locale.US));
+
         tts = new TextToSpeech(this, status -> {
             if (status == TextToSpeech.SUCCESS) {
+                tts.setLanguage(Locale.US);
                 tts.setOnUtteranceProgressListener(new UtteranceProgressListener() {
-                    @Override
-                    public void onStart(String utteranceId) {}
-
-                    @Override
-                    public void onDone(String utteranceId) {
-                        new Handler(Looper.getMainLooper()).post(() -> {
-                            recyclerAdapter.speechEnabled = false;
-                        });
+                    @Override public void onStart(String utteranceId) {}
+                    @Override public void onDone(String utteranceId) {
+                        new Handler(Looper.getMainLooper()).post(() -> recyclerAdapter.speechEnabled = false);
                     }
-
-                    @Override
-                    public void onError(String utteranceId) {
-                        new Handler(Looper.getMainLooper()).post(() -> {
-                            recyclerAdapter.speechEnabled = false;
-                        });
+                    @Override public void onError(String utteranceId) {
+                        new Handler(Looper.getMainLooper()).post(() -> recyclerAdapter.speechEnabled = false);
                     }
                 });
             }
         });
+
     }
 
     private void initAdapter() {
@@ -164,10 +142,11 @@ public class MainActivity extends AppCompatActivity {
 
             hideWelcomeContent();
         }
-
         list.add(new ChatModel(ai, user, isAi, true));
         recyclerAdapter.notifyItemInserted(list.size() -1);
         binding.recyclerView.scrollToPosition(list.size()-1);
+        history += "\n"+user;
+        binding.loadingBar.setVisibility(GONE);
     }
 
     public interface VolleyListener{
@@ -193,6 +172,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+
     private void initButtonListeners(){
         binding.btnLayout.setOnClickListener(v->{
             String text = binding.edQuery.getText().toString();
@@ -200,54 +180,54 @@ public class MainActivity extends AppCompatActivity {
             addInRecycler(null, text, false);
             binding.edQuery.setText("");
             //building json
-            JSONObject toSend = new JSONObject();
-            try {
-                JSONArray messages = new JSONArray()
-                        .put(new JSONObject()
-                        .put("role", "system")
-                                .put("content", SECRETS.prompt + history))
-                        .put(new JSONObject()
-                                .put("role", "user")
-                                .put("content", text));
 
-                toSend.put("model", "openai/gpt-oss-20b");
-                toSend.put("messages", messages);
-
-            } catch (JSONException e) {
-                throw new RuntimeException(e);
-            }
-            //sending to ai -----------
+            //asking to ai the keyword -----------
             binding.loadingBar.setVisibility(VISIBLE);
             disableButton();
 
-            sendToAi(toSend, new VolleyListener() {
+            sendToAi(makeJsonObject(text, true, null, null), new VolleyListener() {
                 @Override
                 public void onSuccess(JSONObject result) {
-                    binding.loadingBar.setVisibility(GONE);
+                    Log.d("volley", result.toString());
+                    JSONObject jsonObject = getJsonObjectFromString(getOutputFromServerJson(result));
 
-                    history += "\n"+text;
-                    String output = getOutputFromServerJson(result);
-                    addInRecycler(output, null, true);
+                    Boolean needsPersona = jsonObject.optBoolean("needsPersona");
+                    String fieldOrAnswer = jsonObject.optString("fieldOrAnswer");
 
+
+                    if (!needsPersona){
+                        addInRecycler(fieldOrAnswer, text, true);
+                    }else {
+                        String question = jsonObject.optString("question");
+                        sendToAi(makeJsonObject(text, false, fieldOrAnswer, question), new VolleyListener() {
+                            @Override
+                            public void onSuccess(JSONObject result) {
+                                Log.d("volley",result.toString());
+
+                                String output = getOutputFromServerJson(result);
+                                addInRecycler(output, text, true);
+
+
+                            }
+
+                            @Override
+                            public void onFailed(VolleyError error) {
+                                apiRequestFailed(error);
+                            }
+                        });
+                    }
 
                 }
 
                 @Override
                 public void onFailed(VolleyError error) {
-                    binding.loadingBar.setVisibility(GONE);
-                    enableButton();
                     Log.e("volley",error.toString());
-                    Toast.makeText(MainActivity.this, "Error "+error.networkResponse.statusCode+" :"+error.toString(), Toast.LENGTH_SHORT).show();
-                    if (!list.isEmpty()) {
-                        int lastIndex = list.size() - 1;
-                        list.remove(lastIndex);
-                        recyclerAdapter.notifyItemRemoved(lastIndex);
-                    }
-
-
-
+                    apiRequestFailed(error);
                 }
             });
+
+
+
 
 
 
@@ -279,12 +259,58 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    private void apiRequestFailed(VolleyError error){
+        binding.loadingBar.setVisibility(GONE);
+        enableButton();
+        Log.e("volley",error.toString());
+        Toast.makeText(MainActivity.this, "Error "+error.networkResponse.statusCode+" :"+error.toString(), Toast.LENGTH_SHORT).show();
+        if (!list.isEmpty()) {
+            int lastIndex = list.size() - 1;
+            list.remove(lastIndex);
+            recyclerAdapter.notifyItemRemoved(lastIndex);
+        }
+
+
+
+    }
+
     private String getOutputFromServerJson(JSONObject jsonObject) {
         return jsonObject
                 .optJSONArray("choices")
                 .optJSONObject(0)
                 .optJSONObject("message")
                 .optString("content", "");
+    }
+
+    private JSONObject makeJsonObject(String query, Boolean system, String keyword,String question) {
+        String system_content = "";
+        String modelToUse = "";
+        if (system){
+            system_content = SECRETS.small_llm_prompt + history;
+            modelToUse = "llama-3.1-8b-instant";
+
+
+        }else {
+            modelToUse = "openai/gpt-oss-20b";
+            system_content =  "You are a virtual clone of tajim. user want to know about you, his question : "+question+" info you have: "+DemoInfo.getInfo(keyword)+". Just reply only the answer, nothing else. Reply I don't know if you don't have the answer" ;
+        }
+        JSONObject toSend = new JSONObject();
+        try {
+            JSONArray messages = new JSONArray()
+                    .put(new JSONObject()
+                            .put("role", "system")
+                            .put("content",system_content))
+                    .put(new JSONObject()
+                            .put("role", "user")
+                            .put("content", query));
+
+            toSend.put("model", modelToUse);
+            toSend.put("messages", messages);
+
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
+        return toSend;
     }
 
 
@@ -366,6 +392,17 @@ public class MainActivity extends AppCompatActivity {
 
         }, 600);
     }
+
+    private JSONObject getJsonObjectFromString(String obj){
+        try {
+            return new JSONObject(obj);
+        } catch (JSONException e) {
+            return new JSONObject();
+        }
+    }
+
+
+
 
 
 
