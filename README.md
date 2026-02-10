@@ -1,3 +1,4 @@
+---
 
 # Tajim AI
 
@@ -50,14 +51,10 @@
 
 ## Screenshots
 
-### Interface
-![Interface](screenshots/interface.jpg)
+| Interface | Review | Update API |
+|----------|--------|------------|
+| ![](screenshots/interface.jpg) | ![](screenshots/review.jpg) | ![](screenshots/update_api.jpg) |
 
-### Review
-![Review](screenshots/review.jpg)
-
-### Update API
-![Update API](screenshots/update_api.jpg)
 
 ---
 
