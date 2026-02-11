@@ -150,9 +150,24 @@ public class SqliteDB extends SQLiteOpenHelper {
         cv.put("name", name);
         return db.insert("categories", null, cv);
     }
+    public long getCategoryId(String name) {
+        Cursor cursor = getReadableDatabase().query(
+                "categories",
+                new String[]{"id"},
+                "name = ?",
+                new String[]{name},
+                null, null, null
+        );
+        cursor.moveToFirst();
+        long id = cursor.getLong(cursor.getColumnIndexOrThrow("id"));
+        cursor.close();
+        return id;
+    }
+
+
 
     // 3. Insert description
-    public long addDescription(String name, String fallbackName, int categoryId, int personId, String value) {
+    public long addDescription(String name, String fallbackName, long categoryId, long personId, String value) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
         cv.put("name", name);

@@ -4,6 +4,7 @@ import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -17,6 +18,8 @@ import android.view.animation.OvershootInterpolator;
 import android.widget.PopupMenu;
 import android.widget.Toast;
 import androidx.activity.EdgeToEdge;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -39,6 +42,9 @@ import com.tajimz.tajimai.models.ChatModel;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -214,7 +220,8 @@ public class MainActivity extends AppCompatActivity {
 
                 return true;
             }else if (id == R.id.update_personality){
-                startActivity(new Intent(this, AiCloneIntroActivity.class));
+//                startActivity(new Intent(this, AiCloneIntroActivity.class));
+                importPersonality();
 
                 return true;
             }
@@ -222,6 +229,68 @@ public class MainActivity extends AppCompatActivity {
         });
         popupMenu.show();
     }
+
+    private static final String TAG = "JSON";
+
+    // 1. Register the Activity Result launcher
+    private final ActivityResultLauncher<Intent> pickJsonLauncher =
+            registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+                if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+                    Uri uri = result.getData().getData();
+                    if (uri != null) {
+                        try (InputStream is = getContentResolver().openInputStream(uri)) {
+                            if (is != null) {
+                                String json = new String(is.readAllBytes(), StandardCharsets.UTF_8);
+                                JSONObject obj = new JSONObject(json);
+                                Log.d("jsonout", obj.toString());
+                                insertPersonalityInDB(obj);
+                                // handle your imported personality here
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            Toast.makeText(this, "Failed to read JSON", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }
+            });
+
+    // 2. Launch the picker
+    private void pickJsonFile() {
+        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        intent.setType("application/json");
+        pickJsonLauncher.launch(intent);
+    }
+
+    // 3. Call this when you want to import
+    private void importPersonality() {
+        pickJsonFile();
+    }
+    private void insertPersonalityInDB(JSONObject jsonObject){
+        try {
+            long person_id = sqliteDB.addPersonality(jsonObject.getString("personality"));
+            JSONArray jsonArray = jsonObject.getJSONArray("categories");
+            for (int i = 0 ; i < jsonArray.length(); i ++){
+                JSONObject obj = jsonArray.getJSONObject(i);
+                String categoryName = obj.getString("name");
+                long cat_id= sqliteDB.getCategoryId(categoryName);
+                JSONArray jsonArray1 = obj.getJSONArray("descriptions");
+                for (int j = 0; j < jsonArray1.length(); j++){
+                    JSONObject jsonObject1 = jsonArray1.getJSONObject(j);
+                    sqliteDB.addDescription(jsonObject1.getString("key"), jsonObject1.getString("alias"), cat_id, person_id, jsonObject1.getString("value"));
+
+                }
+
+            }
+
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
+
+
     private void handleQuerySubmit(String query){
         addInRecycler(null, query, false);
         binding.loadingBar.setVisibility(VISIBLE);
@@ -237,10 +306,10 @@ public class MainActivity extends AppCompatActivity {
                 String answerOrCategory = jsonObject.optString("answerOrCategory");
                 if (needsPersona){
 
-                    String name = sqliteDB.getDescriptionByPath("1."+answerOrCategory);
+                    String name = sqliteDB.getDescriptionByPath(getSelectedPerson()+answerOrCategory);
                     Log.d("volley_cat", answerOrCategory);
                     if (name.equals("no_info")){
-                        JSONArray jsonArray = sqliteDB.getAllDescriptionByPathAsJson("1."+answerOrCategory);
+                        JSONArray jsonArray = sqliteDB.getAllDescriptionByPathAsJson(getSelectedPerson()+answerOrCategory);
                         handleAiResponse(query, jsonArray);
 
                     }else{
@@ -435,6 +504,12 @@ public class MainActivity extends AppCompatActivity {
             editor.putString("first","no");
             editor.apply();
         }
+    }
+
+    private String getSelectedPerson(){
+        String toReturn = sharedPreferences.getString("selected","1")+".";
+        Log.d("app_info",toReturn);
+        return toReturn;
     }
 
 
