@@ -17,6 +17,7 @@ import android.view.animation.OvershootInterpolator;
 import android.widget.PopupMenu;
 import android.widget.Toast;
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
@@ -31,6 +32,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.tajimz.tajimai.adapters.RecyclerAdapter;
 import com.tajimz.tajimai.aiclone.AiCloneIntroActivity;
+import com.tajimz.tajimai.database.SqliteDB;
 import com.tajimz.tajimai.databinding.ActivityMainBinding;
 import com.tajimz.tajimai.databinding.AlertUpdateApiBinding;
 import com.tajimz.tajimai.models.ChatModel;
@@ -52,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
     SharedPreferences sharedPreferences;
     SharedPreferences.Editor editor;
     TextToSpeech tts;
-
+    SqliteDB sqliteDB ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,9 +73,7 @@ public class MainActivity extends AppCompatActivity {
         initButtonListeners();
         requestQueue = Volley.newRequestQueue(this);
         showWelcomeContent();
-
-
-
+        seedDefaultPersonality();
 
 
 
@@ -107,6 +107,8 @@ public class MainActivity extends AppCompatActivity {
 
             return insets;
         });
+        sqliteDB = new SqliteDB(MainActivity.this);
+
     }
 
     private void setupTextToSpeech(){
@@ -176,55 +178,8 @@ public class MainActivity extends AppCompatActivity {
         binding.btnLayout.setOnClickListener(v->{
             String text = binding.edQuery.getText().toString().trim();
             if (text.isEmpty() ) return;
-            addInRecycler(null, text, false);
             binding.edQuery.setText("");
-            //building json
-
-            //asking to ai the keyword -----------
-            binding.loadingBar.setVisibility(VISIBLE);
-            disableButton();
-
-            sendToAi(makeJsonObject(text, true, null, null), new VolleyListener() {
-                @Override
-                public void onSuccess(JSONObject result) {
-                    Log.d("volley", result.toString());
-                    JSONObject jsonObject = getJsonObjectFromString(getOutputFromServerJson(result));
-
-                    Boolean needsPersona = jsonObject.optBoolean("needsPersona");
-                    String fieldOrAnswer = jsonObject.optString("fieldOrAnswer");
-
-
-                    if (!needsPersona){
-                        addInRecycler(fieldOrAnswer, text, true);
-                    }else {
-                        String question = jsonObject.optString("question");
-                        sendToAi(makeJsonObject(text, false, fieldOrAnswer, question), new VolleyListener() {
-                            @Override
-                            public void onSuccess(JSONObject result) {
-                                Log.d("volley",result.toString());
-
-                                String output = getOutputFromServerJson(result);
-                                addInRecycler(output, text, true);
-
-
-                            }
-
-                            @Override
-                            public void onFailed(VolleyError error) {
-                                apiRequestFailed(error);
-                            }
-                        });
-                    }
-
-                }
-
-                @Override
-                public void onFailed(VolleyError error) {
-                    Log.e("volley",error.toString());
-                    apiRequestFailed(error);
-                }
-            });
-
+            handleQuerySubmit(text);
 
 
 
@@ -232,38 +187,100 @@ public class MainActivity extends AppCompatActivity {
 
         });
 
-        binding.imgThreeDots.setOnClickListener(v->{
-            PopupMenu popupMenu = new PopupMenu(this, v);
-            popupMenu.getMenuInflater().inflate(R.menu.pop_up_menu_main, popupMenu.getMenu());
-            popupMenu.setOnMenuItemClickListener(menuItem->{
-
-                int id = menuItem.getItemId();
-                if (id == R.id.update_api){
-
-                    showUpdateApiAlert();
-
-                    return true;
-                }else if (id == R.id.about_us){
-                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://tajimz.github.io")));
-
-                    return true;
-                }else if (id == R.id.privacy_policy){
-                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/tajimz/tajim-ai")));
-
-                    return true;
-                }else if (id == R.id.update_personality){
-                    startActivity(new Intent(this, AiCloneIntroActivity.class));
-
-                    return true;
-                }
-                return false;
-            });
-            popupMenu.show();
-        });
+        binding.imgThreeDots.setOnClickListener(this::showPopUpMenu);
 
         binding.imgNav.setOnClickListener(v->{
             Toast.makeText(this, "Coming soon", Toast.LENGTH_SHORT).show();
         });
+    }
+
+    private void showPopUpMenu(View v){
+        PopupMenu popupMenu = new PopupMenu(this, v);
+        popupMenu.getMenuInflater().inflate(R.menu.pop_up_menu_main, popupMenu.getMenu());
+        popupMenu.setOnMenuItemClickListener(menuItem->{
+
+            int id = menuItem.getItemId();
+            if (id == R.id.update_api){
+
+                showUpdateApiAlert();
+
+                return true;
+            }else if (id == R.id.about_us){
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://tajimz.github.io")));
+
+                return true;
+            }else if (id == R.id.privacy_policy){
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/tajimz/tajim-ai")));
+
+                return true;
+            }else if (id == R.id.update_personality){
+                startActivity(new Intent(this, AiCloneIntroActivity.class));
+
+                return true;
+            }
+            return false;
+        });
+        popupMenu.show();
+    }
+    private void handleQuerySubmit(String query){
+        addInRecycler(null, query, false);
+        binding.loadingBar.setVisibility(VISIBLE);
+        disableButton();
+        sendToAi(makeJsonObject(query, "Tajim", null), new VolleyListener() {
+            @Override
+            public void onSuccess(JSONObject result) {
+                Log.d("volley",result.toString());
+                JSONObject jsonObject = getJsonObjectFromString(getOutputFromServerJson(result));
+
+                boolean needsPersona = jsonObject.optBoolean("needsPersona");
+
+                String answerOrCategory = jsonObject.optString("answerOrCategory");
+                if (needsPersona){
+
+                    String name = sqliteDB.getDescriptionByPath("1."+answerOrCategory);
+                    Log.d("volley_cat", answerOrCategory);
+                    if (name.equals("no_info")){
+                        JSONArray jsonArray = sqliteDB.getAllDescriptionByPathAsJson("1."+answerOrCategory);
+                        handleAiResponse(query, jsonArray);
+
+                    }else{
+                        addInRecycler(name , query, true);
+                    }
+
+
+                }else {
+                    addInRecycler( answerOrCategory, query, true);
+
+                }
+
+
+            }
+
+            @Override
+            public void onFailed(VolleyError error) {
+                Log.e("volley",error.toString());
+                apiRequestFailed(error);
+            }
+        });
+    }
+    private void handleAiResponse(String query, JSONArray jsonArray){
+
+        sendToAi(makeJsonObject(query, "name", jsonArray), new VolleyListener() {
+            @Override
+            public void onSuccess(JSONObject result) {
+                Log.d("volley2",result.toString());
+                String answer = getOutputFromServerJson(result);
+                addInRecycler(answer , query, true);
+            }
+
+            @Override
+            public void onFailed(VolleyError error) {
+                apiRequestFailed(error);
+
+            }
+        });
+
+
     }
 
     private void apiRequestFailed(VolleyError error){
@@ -287,37 +304,6 @@ public class MainActivity extends AppCompatActivity {
                 .optJSONObject(0)
                 .optJSONObject("message")
                 .optString("content", "");
-    }
-
-    private JSONObject makeJsonObject(String query, Boolean system, String keyword,String question) {
-        String system_content = "";
-        String modelToUse = "";
-        if (system){
-            system_content = SECRETS.small_llm_prompt;
-            modelToUse = "llama-3.1-8b-instant";
-
-
-        }else {
-            modelToUse = "openai/gpt-oss-20b";
-            system_content =  SECRETS.llm_prompt+question+" info you have: "+TajimInfo.getInfo(keyword)+SECRETS.llm_prompt_2;
-        }
-        JSONObject toSend = new JSONObject();
-        try {
-            JSONArray messages = new JSONArray()
-                    .put(new JSONObject()
-                            .put("role", "system")
-                            .put("content",system_content))
-                    .put(new JSONObject()
-                            .put("role", "user")
-                            .put("content", query));
-
-            toSend.put("model", modelToUse);
-            toSend.put("messages", messages);
-
-        } catch (JSONException e) {
-            throw new RuntimeException(e);
-        }
-        return toSend;
     }
 
 
@@ -407,6 +393,50 @@ public class MainActivity extends AppCompatActivity {
             return new JSONObject();
         }
     }
+
+
+    private JSONObject makeJsonObject(String query, String name, @Nullable JSONArray jsonArray) {
+        JSONObject toSend = new JSONObject();
+        try {
+            // Build messages array
+            JSONArray messages = new JSONArray();
+
+            // Use different system prompt depending on whether jsonArray is provided
+            if (jsonArray != null) {
+                messages.put(new JSONObject()
+                        .put("role", "system")
+                        .put("content", SECRETS.getPrompt2(name, jsonArray)));
+            } else {
+                messages.put(new JSONObject()
+                        .put("role", "system")
+                        .put("content", SECRETS.getPrompt(name)));
+            }
+
+            // Add user message
+            messages.put(new JSONObject()
+                    .put("role", "user")
+                    .put("content", query));
+
+            // Build final JSON
+            toSend.put("model", "openai/gpt-oss-20b");
+            toSend.put("messages", messages);
+
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
+
+        return toSend;
+    }
+
+    private void seedDefaultPersonality(){
+        if (sharedPreferences.getString("first",null) == null){
+            Log.d("app_info","data_seeded");
+            sqliteDB.seedDefaultPersonality();
+            editor.putString("first","no");
+            editor.apply();
+        }
+    }
+
 
 
 
